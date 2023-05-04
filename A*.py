@@ -25,3 +25,26 @@ def A_star(start_state, goal_state, heuristic_function, successors_function):
                     open_set.append(successor.state)
 
     return None
+
+def heuristic(state, goal_state):
+    return abs(state[0] - goal_state[0]) + abs(state[1] - goal_state[1])
+
+def successors(state):
+    x, y = state
+    successors = []
+    if x > 0:
+        successors.append(((x-1, y), 1))
+    if x < 4:
+        successors.append(((x+1, y), 1))
+    if y > 0:
+        successors.append(((x, y-1), 1))
+    if y < 4:
+        successors.append(((x, y+1), 1))
+    return successors
+
+
+start_state = (0, 0)
+goal_state = (4, 4)
+path = A_star(start_state, goal_state, heuristic, successors)
+print(path)
+
