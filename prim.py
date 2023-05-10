@@ -12,23 +12,77 @@ Choose any vertex to start with and add it to the MST.
 3)Repeat steps 2 and 3 until all vertices are in the MST.
 '''
 
-def prim(graph):
-    mst = []
-    visited = set()
-    start_vertex = next(iter(graph))
-    visited.add(start_vertex)
-    edges = [(cost, start_vertex, to) for to, cost in graph[start_vertex].items()]
 
-    while edges:
-        cost, frm, to = min(edges)
-        edges.remove((cost, frm, to))
-        if to not in visited:
-            visited.add(to)
-            mst.append((frm, to, cost))
-            for to_next, cost_next in graph[to].items():
-                if to_next not in visited:
-                    edges.append((cost_next, to, to_next))
+# Library for INT_MAX
+import sys
 
-    return mst
-graph = {'A': {'B': 2, 'C': 3}, 'B': {'A': 2, 'C': 4}, 'C': {'A': 3, 'B': 4}}
-print(prim(graph))
+
+class Graph():
+	def __init__(self, vertices):
+		self.V = vertices
+		self.graph = [[0 for column in range(vertices)]
+					for row in range(vertices)]
+
+	# A utility function to print
+	# the constructed MST stored in parent[]
+	def printMST(self, parent):
+		print("Edge \tWeight")
+		for i in range(1, self.V):
+			print(parent[i], "-", i, "\t", self.graph[i][parent[i]])
+
+	def minKey(self, key, mstSet):
+
+		# Initialize min value
+		min = sys.maxsize
+
+		for v in range(self.V):
+			if key[v] < min and mstSet[v] == False:
+				min = key[v]
+				min_index = v
+
+		return min_index
+
+	# Function to construct and print MST for a graph
+	# represented using adjacency matrix representation
+	def primMST(self):
+
+		# Key values used to pick minimum weight edge in cut
+		key = [sys.maxsize] * self.V
+		parent = [None] * self.V # Array to store constructed MST
+		# Make key 0 so that this vertex is picked as first vertex
+		key[0] = 0
+		mstSet = [False] * self.V
+
+		parent[0] = -1 # First node is always the root of
+
+		for cout in range(self.V):
+
+			# Pick the minimum distance vertex from
+			# the set of vertices not yet processed.
+			u = self.minKey(key, mstSet)
+
+			mstSet[u] = True
+
+			for v in range(self.V):
+
+				if self.graph[u][v] > 0 and mstSet[v] == False \
+				and key[v] > self.graph[u][v]:
+					key[v] = self.graph[u][v]
+					parent[v] = u
+
+		self.printMST(parent)
+
+
+# Driver's code
+if __name__ == '__main__':
+	g = Graph(5)
+	g.graph = [[0, 2, 0, 6, 0],
+			[2, 0, 3, 8, 5],
+			[0, 3, 0, 0, 7],
+			[6, 8, 0, 0, 9],
+			[0, 5, 7, 9, 0]]
+
+	g.primMST()
+
+
+
