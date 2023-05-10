@@ -16,18 +16,20 @@ def insert(root,newValue):
         root.rightChild=insert(root.rightChild,newValue)
     return root
 
-def bfs(root):
-    if root==None:
+def bfs(node_queue):
+    if not node_queue:
         return
-    Q=Queue()
-    Q.put(root)
-    while(not Q.empty()):
-        node=Q.get()
-        if node==None:
-            continue
-        print(node.data)
-        Q.put(node.leftChild)
-        Q.put(node.rightChild)
+    
+    current_node = node_queue.pop(0)
+    print(current_node.data)
+    
+    if current_node.leftChild:
+        node_queue.append(current_node.leftChild)
+    
+    if current_node.rightChild:
+        node_queue.append(current_node.rightChild)
+    
+    bfs(node_queue)
     
 def postorder(root):
     
